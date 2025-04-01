@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Easy English Translator",
+  "version": "1.0",
+  "description": "Traduza textos rapidamente usando o Lingva Translate.",
+  "permissions": ["activeTab", "storage"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  }
+}
