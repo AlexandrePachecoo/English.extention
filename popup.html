@@ -3,7 +3,99 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Easy english</title>
+    <title>Easy English</title>
+    <style>
+      /* Estilo para o botão */
+      #button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: 0.3s;
+      }
+
+      /* Estilo para o botão quando estiver carregando */
+      .loading {
+        background-color: #0056b3;
+        cursor: wait;
+      }
+
+      /* Ícone de carregamento (spinner) */
+      .spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid white;
+        border-top: 2px solid transparent;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 8px;
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
   </head>
-  <body></body>
+  <body>
+    <div>
+      <h1>Easy English</h1>
+      <input id="textInput" type="text" placeholder="Write here:" />
+      <button id="button">Translate</button>
+    </div>
+
+    <div>
+      <p id="response">Response</p>
+    </div>
+
+    <script>
+      const text = document.getElementById("textInput");
+      const btn = document.getElementById("button");
+      const response = document.getElementById("response");
+
+      async function translate() {
+        const texto = text.value.trim();
+
+        if (texto === "") {
+          response.textContent = "Please enter some text to translate.";
+          return;
+        }
+
+        const url = `https://lingva.ml/api/v1/pt/en/${encodeURIComponent(
+          texto
+        )}`;
+
+        // Adiciona o estado de carregamento
+        btn.innerHTML = 'Translating <span class="spinner"></span>';
+        btn.classList.add("loading");
+        btn.disabled = true;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+
+          const data = await res.json();
+          response.textContent = "Translation: " + data.translation;
+        } catch (error) {
+          response.textContent = "Error in translation: " + error.message;
+          console.error(error);
+        } finally {
+          // Remove o estado de carregamento
+          btn.innerHTML = "Translate";
+          btn.classList.remove("loading");
+          btn.disabled = false;
+        }
+      }
+
+      btn.addEventListener("click", translate);
+    </script>
+  </body>
 </html>
